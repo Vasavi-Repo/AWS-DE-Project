@@ -17,7 +17,7 @@ job.init(args['JOB_NAME'], args)
 
 from pyspark.context import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, date_format, sum  # Added missing imports
+from pyspark.sql.functions import col, date_format, sum  
 from pyspark.sql.types import StringType
 
 # Define S3 input and output paths
@@ -26,8 +26,8 @@ output_s3_path = "s3://mydatalakee/processed-data/"
 
 # Read Raw Data from S3 into DynamicFrame
 dynamic_frame_raw = glueContext.create_dynamic_frame.from_catalog(
-    database="retaildb",  # Fixed the quotation marks
-    table_name="retail_transactional_data",  # Fixed the quotation marks
+    database="retaildb",  
+    table_name="retail_transactional_data",  
     bookmark_options={"job_bookmark_option": "job-bookmark-enable"},
     transformation_ctx="dynamic_frame_raw"
 )
@@ -37,19 +37,19 @@ data_frame_raw = dynamic_frame_raw.toDF()
 
 # Example: Filtering transactions with amount less than or equal to 0
 data_frame_filtered = data_frame_raw.filter(
-    (col("Units_Sold") >= 0) & (col("Unit_Price") >= 0) & (col("Total_Sales") >= 0)  # Fixed 'or' to '|'
+    (col("Units_Sold") >= 0) & (col("Unit_Price") >= 0) & (col("Total_Sales") >= 0)  
 )
 
 # Example: Adding a column for the day of the week
 data_frame_transformed = data_frame_filtered.withColumn(
-    "day_of_week", date_format(col("Date"), "EEEE")  # Fixed the date format logic
+    "day_of_week", date_format(col("Date"), "EEEE")  
 )
 
 # Example: Aggregating sales data by day and region
 sales_aggregated = data_frame_transformed.groupBy(
     "Date", "Store_Location"
 ).agg(
-    sum("Total_Sales").alias("total_sales")  # Fixed column name casing
+    sum("Total_Sales").alias("total_sales")  
 )
 
 # Convert back to DynamicFrame for writing to S3
