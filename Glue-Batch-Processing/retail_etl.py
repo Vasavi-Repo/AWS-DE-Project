@@ -35,7 +35,7 @@ dynamic_frame_raw = glueContext.create_dynamic_frame.from_catalog(
 # Convert to DataFrame for transformation
 data_frame_raw = dynamic_frame_raw.toDF()
 
-# Example: Filtering transactions with amount less than or equal to 0
+# Example: Filtering transactions with amount greater than or equal to 0
 data_frame_filtered = data_frame_raw.filter(
     (col("Units_Sold") >= 0) & (col("Unit_Price") >= 0) & (col("Total_Sales") >= 0)  
 )
